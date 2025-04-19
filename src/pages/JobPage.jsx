@@ -1,36 +1,20 @@
 import {useState, useEffect} from 'react'
-import { useParams, useLoaderData } from 'react-router-dom'
+import { useParams, useLoaderData, useNavigate } from 'react-router-dom'
 import Spinner from '../components/Spinner'
+import { Link } from 'react-router-dom'
 
-const JobPage = () => {
+const JobPage = ({deleteJob}) => {
 
     const {id} = useParams()
     const job = useLoaderData()
-    // const [loading, setLoading] = useState(true)
-    
+    const navigate = useNavigate()
 
-
-
-    // useEffect(()=> {
-    //     const fetchJob = async () =>{
-    //         try {
-    //             const res = await fetch(`/api/jobs/${id}`)
-    //             const data = await res.json()
-    //             // console.log(data)
-    //             setJob(data)
-    //         } catch (error) {
-    //             console.log("Error fetching job:", error)
-    //         } finally {
-    //             setLoading(false)
-    //         }
-    //     }
-    //     setTimeout(() => fetchJob(), 1000)
-    // }, [id])
-
-    // return loading ? <Spinner /> : (<div>
-    //     <h1>{job.title}</h1>
-    //     <p>Details about a specific job will be displayed here.</p>
-    //     </div>)
+    const onDeleteClick = (jobID) => {
+        const confirm = window.confirm('Are you sure you want to delete this job?')
+        if (!confirm) return;
+        deleteJob(jobID)
+        navigate('/jobs')
+    }
 
     return (
         <section className="bg-indigo-50">
@@ -91,13 +75,14 @@ const JobPage = () => {
                         {/* Manage */}
                         <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                             <h3 className="text-xl font-bold mb-6">Manage Job</h3>
-                            <a
-                                href="/add-job.html"
+                            <Link
+                                to={`/edit-job/${job.id}`}
                                 className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                             >
                                 Edit Job
-                            </a>
+                            </Link>
                             <button
+                                onClick={()=> onDeleteClick(job.id)}
                                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                             >
                                 Delete Job
